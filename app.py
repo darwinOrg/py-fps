@@ -1,4 +1,5 @@
 import asyncio
+import os
 from concurrent.futures import ThreadPoolExecutor
 from typing import Optional
 
@@ -131,4 +132,5 @@ async def global_exception_handler(_: Request, e: Exception):
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=9999)
+    port = os.getenv('FPS_PORT', '9999')
+    uvicorn.run(app, host='0.0.0.0', port=int(port))
