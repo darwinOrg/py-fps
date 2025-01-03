@@ -1,0 +1,1 @@
+/Applications/LibreOffice.app/Contents/Resources/python -m unoserver.server
