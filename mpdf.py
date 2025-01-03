@@ -6,7 +6,6 @@ from loguru import logger
 from pdfminer.high_level import extract_text
 
 output_txt_filename = 'cv.txt'
-output_md_filename = 'cv.md'
 
 special_char_map = {
     0xA728: "TZ",
