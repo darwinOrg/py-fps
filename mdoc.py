@@ -1,5 +1,4 @@
 import os.path
-import pathlib
 import subprocess
 
 from weasyprint import HTML
@@ -22,9 +21,5 @@ def convert_file_format(input_path: str, output_path: str):
         return
 
     output_format = output_ext[1:]
-    out_dir = os.path.dirname(output_path)
-    subprocess.run(['soffice', '--headless', '--convert-to', output_format, input_path, '--outdir', out_dir],
+    subprocess.run(['unoconvert', '--convert-to', output_format, input_path, output_path],
                    check=True, capture_output=True, text=True, timeout=60)
-    converted_path = os.path.join(out_dir, pathlib.Path(input_path).stem + output_ext)
-    if converted_path != output_path:
-        os.rename(converted_path, output_path)
