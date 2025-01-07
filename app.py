@@ -22,7 +22,6 @@ executor = ThreadPoolExecutor(max_workers=100)
 class ConvertFileFormatReq(BaseModel):
     input_path: str
     output_path: str
-    output_format: str
 
 
 class ExtractPdfTextReq(BaseModel):
@@ -61,8 +60,7 @@ async def convert_file_format_api(req: ConvertFileFormatReq):
         executor,
         convert_file_format,
         req.input_path,
-        req.output_path,
-        req.output_format)
+        req.output_path)
     return JSONResponse(Result.success().to_dict(), status_code=200)
 
 
