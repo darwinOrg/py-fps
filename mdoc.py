@@ -18,5 +18,5 @@ def convert_file_format(input_path: str, output_path: str, output_format: str):
             HTML(string=f.read()).write_pdf(output_path)
             return
 
-    subprocess.run(['unoconvert', '--convert-to', output_format, input_path, output_path],
+    subprocess.run(['soffice', '--headless', '--convert-to', output_format, input_path, '--outdir', output_path],
                    check=True, capture_output=True, text=True, timeout=60)
