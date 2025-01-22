@@ -1,1 +1,1 @@
-uvicorn app:app --host=0.0.0.0 --port=9999
+nohup uvicorn app:app --host=0.0.0.0 --port=9999 > log.txt & echo $! > pid.txt
