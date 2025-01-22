@@ -1,8 +1,7 @@
 import os.path
 import pathlib
+import platform
 import subprocess
-
-from weasyprint import HTML
 
 use_uno = os.getenv("USE_UNO") == 'true'
 
@@ -14,9 +13,13 @@ def convert_file_format(input_path: str, output_path: str):
     _, output_ext = os.path.splitext(output_path)
 
     if input_path.endswith('.html') and output_ext == '.pdf':
-        with open(input_path) as f:
-            HTML(string=f.read()).write_pdf(output_path)
-            return
+        if platform.system() == "Linux":
+            subprocess.run(['xvfb-run', 'wkhtmltopdf', input_path, output_path],
+                           check=True, capture_output=True, text=True, timeout=60)
+        else:
+            subprocess.run(['wkhtmltopdf', input_path, output_path],
+                           check=True, capture_output=True, text=True, timeout=60)
+        return
 
     if output_ext == '.md':
         subprocess.run(['pandoc', '--toc', input_path, '-o', output_path],

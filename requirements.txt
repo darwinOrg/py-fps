@@ -2,7 +2,6 @@ uvicorn
 fastapi
 loguru
 pydantic
-weasyprint
 pillow
 pathlib
 pdfminer-six
