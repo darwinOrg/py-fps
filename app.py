@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from mdoc import convert_file_format
 from mimg import pdf_to_image, compress_image, pdf_image_count
 from mpdf import extract_pdf_text_speed
-from munp import extract_archive
+from mpat import extract_archive
 from result import Result
 
 app = FastAPI()
