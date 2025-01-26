@@ -2,7 +2,6 @@ import os
 import pathlib
 
 import fitz
-from PIL import Image
 from loguru import logger
 
 
@@ -120,3 +119,42 @@ def pdf_image_count(pdf_path: str) -> int:
 
         logger.info(f'pdf_image_count({pdf_path} -> {total_images}) success')
         return total_images
+
+
+from PIL import Image
+
+
+def merge_images_horizontally(img_paths: list[str], output_path: str):
+    images = [Image.open(x) for x in img_paths]
+
+    # 计算总宽度和最大高度
+    widths, heights = zip(*(i.size for i in images))
+    total_width = sum(widths)
+    max_height = max(heights)
+
+    new_img = Image.new('RGB', (total_width, max_height))
+
+    x_offset = 0
+    for img in images:
+        new_img.paste(img, (x_offset, 0))
+        x_offset += img.width
+
+    new_img.save(output_path)
+
+
+def merge_images_vertically(img_paths: list[str], output_path: str):
+    images = [Image.open(x) for x in img_paths]
+
+    # 计算总高度和最大宽度
+    widths, heights = zip(*(i.size for i in images))
+    total_height = sum(heights)
+    max_width = max(widths)
+
+    new_img = Image.new('RGB', (max_width, total_height))
+
+    y_offset = 0
+    for img in images:
+        new_img.paste(img, (0, y_offset))
+        y_offset += img.height
+
+    new_img.save(output_path)

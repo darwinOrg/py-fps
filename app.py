@@ -10,7 +10,8 @@ from loguru import logger
 from pydantic import BaseModel
 
 from mdoc import convert_file_format
-from mimg import pdf_to_image, pdf_to_pngs, compress_image, pdf_image_count
+from mimg import pdf_to_image, pdf_to_pngs, compress_image, pdf_image_count, merge_images_horizontally, \
+    merge_images_vertically
 from mpat import extract_archive
 from mpdf import extract_pdf_text_speed
 from result import Result
@@ -52,6 +53,11 @@ class CompressImageReq(BaseModel):
 
 class PdfImageCountReq(BaseModel):
     pdf_path: str
+
+
+class MergeImagesReq(BaseModel):
+    img_paths: list[str]
+    output_path: str
 
 
 class ExtractArchiveReq(BaseModel):
@@ -126,6 +132,28 @@ async def pdf_image_count_api(req: PdfImageCountReq):
         req.pdf_path
     )
     return JSONResponse(Result.success(image_count).to_dict(), status_code=200)
+
+
+@app.post('/merge-images-horizontally')
+async def merge_images_horizontally_api(req: MergeImagesReq):
+    await asyncio.get_event_loop().run_in_executor(
+        executor,
+        merge_images_horizontally,
+        req.img_paths,
+        req.output_path
+    )
+    return JSONResponse(Result.success().to_dict(), status_code=200)
+
+
+@app.post('/merge-images-vertically')
+async def merge_images_vertically_api(req: MergeImagesReq):
+    await asyncio.get_event_loop().run_in_executor(
+        executor,
+        merge_images_vertically,
+        req.img_paths,
+        req.output_path
+    )
+    return JSONResponse(Result.success().to_dict(), status_code=200)
 
 
 @app.post('/extract-archive')
