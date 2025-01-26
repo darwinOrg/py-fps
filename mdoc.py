@@ -1,7 +1,8 @@
 import os.path
 import pathlib
-import platform
 import subprocess
+
+from pyppeteer import launch
 
 use_uno = os.getenv("USE_UNO") == 'true'
 
@@ -18,11 +19,11 @@ def convert_file_format(input_path: str, output_path: str):
         return
 
     if input_path.endswith('.html') and output_ext == '.pdf':
-        args = ['wkhtmltopdf', input_path, output_path]
-        if platform.system() == "Linux":
-            args.insert(0, 'xvfb-run')
-
-        subprocess.run(args, check=True, capture_output=True, text=True, timeout=60)
+        browser = launch(headless=True)
+        page = browser.newPage()
+        page.goto(f'file://{input_path}')
+        page.pdf(path=output_path, format='A4', printBackground=True)
+        browser.close()
         return
 
     output_format = output_ext[1:]

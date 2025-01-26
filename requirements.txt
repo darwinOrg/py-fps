@@ -7,3 +7,4 @@ pathlib
 pdfminer-six
 pymupdf
 patool
+pyppeteer
