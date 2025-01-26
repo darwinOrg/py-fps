@@ -10,9 +10,9 @@ from loguru import logger
 from pydantic import BaseModel
 
 from mdoc import convert_file_format
-from mimg import pdf_to_image, compress_image, pdf_image_count
-from mpdf import extract_pdf_text_speed
+from mimg import pdf_to_image, pdf_to_pngs, compress_image, pdf_image_count
 from mpat import extract_archive
+from mpdf import extract_pdf_text_speed
 from result import Result
 
 app = FastAPI()
@@ -37,6 +37,11 @@ class PdfToImageReq(BaseModel):
     output_dir: str
     max_page: int
     target_size: int
+
+
+class PdfToPngsReq(BaseModel):
+    pdf_path: str
+    output_dir: str
 
 
 class CompressImageReq(BaseModel):
@@ -88,6 +93,17 @@ async def pdf_to_image_api(req: PdfToImageReq):
         req.target_size
     )
     return JSONResponse(Result.success(image_path).to_dict(), status_code=200)
+
+
+@app.post('/pdf-to-pngs')
+async def pdf_to_pngs_api(req: PdfToPngsReq):
+    pngs = await asyncio.get_event_loop().run_in_executor(
+        executor,
+        pdf_to_pngs,
+        req.pdf_path,
+        req.output_dir,
+    )
+    return JSONResponse(Result.success(pngs).to_dict(), status_code=200)
 
 
 @app.post('/compress-image')

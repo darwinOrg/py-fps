@@ -1,4 +1,5 @@
 import os
+import pathlib
 
 import fitz
 from PIL import Image
@@ -70,6 +71,21 @@ def pdf_to_image(pdf_path: str, output_dir: str, max_page: int, target_size: int
                 return jpeg_output_path
 
     return ''
+
+
+def pdf_to_pngs(pdf_path: str, output_dir: str) -> list[str]:
+    document = fitz.open(pdf_path)
+    pp = pathlib.Path(pdf_path)
+    pngs = []
+
+    for page_num in range(len(document)):
+        page = document.load_page(page_num)
+        pix = page.get_pixmap()
+        output_image_path = f"{output_dir}/{pp.stem}_{page_num + 1}.png"
+        pix.save(output_image_path)
+        pngs.append(output_image_path)
+
+    return pngs
 
 
 def compress_image(input_path: str, output_path: str, target_size: int):
